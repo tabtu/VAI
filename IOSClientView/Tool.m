@@ -8,14 +8,14 @@
 #import "Tool.h"
 
 @implementation Tool
-#define MAX_LEN 2
+#define MAX_LEN 3
 @synthesize isFirst;
 @synthesize isSecond;
 @synthesize res;
 
 -(id)init
 {
-    if(self==[super init])
+    if(	self==[super init])
     {
         isFirst=NO;
         isSecond=NO;
@@ -51,53 +51,37 @@
             switch (i)
             {
                 case 0://living
-                    if([voice containsString:open[i]])
+                    for(int j=0;j<MAX_LEN;j++){
+                    if([voice containsString:open[j]])
                     {
-                        if(isSecond==YES)
-                        {
-                            res=@"z";
-                        }
-                        else
-                        {
-                            res=@"B";
-                        }
-                        
+                        res=@"B";
                         b_open_count++;
                     }
-                    else if ([voice containsString:close[i]])
+                    else if ([voice containsString:close[j]])
                     {
                         res=@"b";
                         b_close_count++;
                     }
-                    else if ([voice containsString:close[i]])
-                    {
-                        res=@"b";
-                        b_close_count++;
                     }
-                    else if([voice isEqualToString:@"Recogonize failed."])
+                    if([voice isEqualToString:@"Recogonize failed."])
                     {
                         res=@"2";
                     }
                     break;
                 case 1://kitchen
-                    if([voice containsString:open[i]])
-                    {
-                        if(isSecond==YES)
-                        {
-                            res=@"w";
-                        }
-                        else
+                    for(int j=0;j<MAX_LEN;j++){
+                        if([voice containsString:open[j]])
                         {
                             res=@"A";
+                            b_open_count++;
                         }
-                        k_open_count++;
+                        else if ([voice containsString:close[j]])
+                        {
+                            res=@"a";
+                            b_close_count++;
+                        }
                     }
-                    else if ([voice containsString:close[i]])
-                    {
-                        res=@"a";
-                        k_close_count++;
-                    }
-                    else if([voice isEqualToString:@"Recogonize failed."])
+                    if([voice isEqualToString:@"Recogonize failed."])
                     {
                         res=@"2";
                     }
@@ -181,7 +165,19 @@
     {
         if ([voice containsString:array[i]])
         {
-            res=@"t";
+            if([voice containsString:@"living"])
+            {
+                res=@"z";
+            }
+            else if([voice containsString:@"kitchen"])
+            {
+                res=@"w";
+            }
+            else
+            {
+                res=@"t";
+            }
+            
             isSecond=YES;
         }
         else if([voice containsString:@"Recogonize failed."])
