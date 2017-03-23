@@ -27,10 +27,21 @@
 -(void)REG_W:(NSString *)voice;
 {
     res=@"2";
+    /*
+    NSMutableArray *dance=[[NSMutableArray alloc]initWithObjects:@"jump",@"dance",@"show",nil];  // y
+    NSMutableArray *shine=[[NSMutableArray alloc]initWithObjects:@"crazy",@"fly",@"out",nil];  // t
+    NSMutableArray *flash=[[NSMutableArray alloc]initWithObjects:@"flash",@"shining",nil];  // w,z
+    NSMutableArray *open=[[NSMutableArray alloc]initWithObjects:@"open",@"on",@"up", nil];  // A,B
+    NSMutableArray *close=[[NSMutableArray alloc]initWithObjects:@"close",@"off",@"down",nil];  // a,b
+    NSMutableArray *place=[[NSMutableArray alloc]initWithObjects:@"living",@"kitchen",@"all",nil];  //
+     */
+    
     NSMutableArray *shine=[[NSMutableArray alloc]initWithObjects:@"crazy",@"flash",@"shining",nil];
     NSMutableArray *open=[[NSMutableArray alloc]initWithObjects:@"open",@"on",@"up", nil];
     NSMutableArray *close=[[NSMutableArray alloc]initWithObjects:@"close",@"off",@"down",nil];
     NSMutableArray *place=[[NSMutableArray alloc]initWithObjects:@"living",@"kitchen",@"all",nil];
+    
+    
     int b_open_count=0;
     int b_close_count=0;
     int k_close_count=0;
@@ -179,6 +190,10 @@
             }
             
             isSecond=YES;
+        }
+        else if([voice containsString:@"dance"])
+        {
+            res=@"y";
         }
         else if([voice containsString:@"Recogonize failed."])
         {
