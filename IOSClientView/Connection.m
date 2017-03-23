@@ -98,7 +98,8 @@
 - (void)sendMessage:(NSString*)string
 {
     NSString *send=string;
-    send=[string stringByAppendingFormat:@"/%@",[[Tool sharedInstance] REG_W:string]];
+    [[Tool sharedInstance] REG_W:string];
+    send=[string stringByAppendingFormat:@"/%@",[Tool sharedInstance].res];
     NSMutableData *data=[[NSMutableData alloc] initWithData:[send dataUsingEncoding:NSUTF8StringEncoding]];
     [self.outputStream write:[data bytes] maxLength:[data length]];
     [Data sharedInstance].outputString=[[Data sharedInstance].outputString stringByAppendingFormat:@"Client: (%@) is sending.\n",string];

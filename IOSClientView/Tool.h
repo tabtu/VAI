@@ -10,11 +10,19 @@
 
 @interface Tool : NSObject
 {
-
+    BOOL isFirst;
+    BOOL isSecond;
+    NSString *res;
 }
 
+@property (assign) BOOL isFirst;
+@property (assign) BOOL isSecond;
+@property (nonatomic) NSString *res;
+
 +(Tool *)sharedInstance;
--(NSString *)REG_W:(NSString *)voice;
+-(void)REG_W:(NSString *)voice;
+-(void)First:(NSString *)voice;
+-(void)Second:(NSString *)voice withArray:(NSMutableArray *)array;
 
 @end
 

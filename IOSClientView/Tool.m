@@ -8,105 +8,116 @@
 #import "Tool.h"
 
 @implementation Tool
-#define MAX_LEN 4
+#define MAX_LEN 2
+@synthesize isFirst;
+@synthesize isSecond;
+@synthesize res;
+
 -(id)init
 {
     if(self==[super init])
     {
-        
+        isFirst=NO;
+        isSecond=NO;
+        res=@"2";
     }
     return self;
 }
 
-
--(NSString *)REG_W:(NSString *)voice;
+-(void)REG_W:(NSString *)voice;
 {
-    NSString *result=@"2";
-    NSMutableArray *shine=[[NSMutableArray alloc]initWithObjects:@"crazy",@"shine",@"shining",@"rock"@"dance",nil];
-    NSMutableArray *open=[[NSMutableArray alloc]initWithObjects:@"open",@"on",@"up",@"",@"", nil];
-    NSMutableArray *close=[[NSMutableArray alloc]initWithObjects:@"close",@"off",@"down",@"",@"", nil];
-    NSMutableArray *place=[[NSMutableArray alloc]initWithObjects:@"bedroom",@"kitchen",@"all",@"",@"", nil];
+    res=@"2";
+    NSMutableArray *shine=[[NSMutableArray alloc]initWithObjects:@"crazy",@"flash",@"shining",nil];
+    NSMutableArray *open=[[NSMutableArray alloc]initWithObjects:@"open",@"on",@"up", nil];
+    NSMutableArray *close=[[NSMutableArray alloc]initWithObjects:@"close",@"off",@"down",nil];
+    NSMutableArray *place=[[NSMutableArray alloc]initWithObjects:@"living",@"kitchen",@"all",nil];
     int b_open_count=0;
     int b_close_count=0;
     int k_close_count=0;
     int k_open_count=0;
     
+    [self First:voice];
+    if(isFirst==NO)
+    {
+        [self Second:voice withArray:shine];
+    }
+    
+ if(isFirst==NO)
+ {
     for(int i=0;i<MAX_LEN;i++)
     {
         if([voice containsString:place[i]])
         {
-            switch (i) {
-                case 0://bedroom
+            switch (i)
+            {
+                case 0://living
                     if([voice containsString:open[i]])
                     {
-                        result=@"B";
+                        if(isSecond==YES)
+                        {
+                            res=@"z";
+                        }
+                        else
+                        {
+                            res=@"B";
+                        }
+                        
                         b_open_count++;
                     }
                     else if ([voice containsString:close[i]])
                     {
-                        result=@"b";
+                        res=@"b";
+                        b_close_count++;
+                    }
+                    else if ([voice containsString:close[i]])
+                    {
+                        res=@"b";
                         b_close_count++;
                     }
                     else if([voice isEqualToString:@"Recogonize failed."])
                     {
-                        result=@"2";
-                        return result;
+                        res=@"2";
                     }
                     break;
                 case 1://kitchen
                     if([voice containsString:open[i]])
                     {
-                        result=@"A";
+                        if(isSecond==YES)
+                        {
+                            res=@"w";
+                        }
+                        else
+                        {
+                            res=@"A";
+                        }
                         k_open_count++;
                     }
                     else if ([voice containsString:close[i]])
                     {
-                        result=@"a";
+                        res=@"a";
                         k_close_count++;
                     }
                     else if([voice isEqualToString:@"Recogonize failed."])
                     {
-                        result=@"2";
-                        return result;
+                        res=@"2";
                     }
                     break;
                 case 2://all
                     if([voice containsString:open[i]])
                     {
-                        result=@"AB";
+                        res=@"AB";
                     }
                     else if ([voice containsString:close[i]])
                     {
-                        result=@"ab";
+                        res=@"ab";
                     }
                     else if([voice isEqualToString:@"Recogonize failed."])
                     {
-                        result=@"2";
-                        return result;
+                        res=@"2";
                     }
                     break;
                 default:
                     break;
-            }
-        }
-        else
-        {
-            if([voice containsString:@"enable"])
-            {
-                result=@"1";
-            }
-            else if ([voice containsString:@"disable"])
-            {
-                result=@"0";
-            }
-            else if ([voice containsString:shine[i]])
-            {
-                result=@"t";
-            }
-            else if([voice containsString:@"Recogonize failed."])
-            {
-                result=@"2";
-                return result;
             }
         }
     }
@@ -115,31 +126,69 @@
     {
         if(k_open_count>k_close_count)
         {
-            result=@"A";
+            res=@"A";
         }
         else if(k_open_count<k_close_count)
         {
-            result=@"a";
+            res=@"a";
         }
         else if(k_open_count<b_open_count)
         {
-            result=@"B";
+            res=@"B";
         }
         else if(k_open_count>b_open_count)
         {
-            result=@"A";
+            res=@"A";
         }
         else if(b_open_count<b_close_count)
         {
-            result=@"b";
+            res=@"b";
         }
         else if(b_open_count>b_close_count)
         {
-            result=@"B";
+            res=@"B";
         }
     }
-    NSLog(@"result = %@",result);
-    return result;
+ }
+    NSLog(@"result = %@",res);
+    isSecond=NO;
+    isFirst=NO;
+}
+
+-(void)First:(NSString *)voice
+{
+    res=@"2";
+    if([voice containsString:@"enable"])
+    {
+        res=@"1";
+        isFirst=YES;
+    }
+    else if ([voice containsString:@"disable"])
+    {
+        res=@"0";
+        isFirst=YES;
+    }
+    else if([voice containsString:@"Recogonize failed."])
+    {
+        res=@"2";
+    }
+}
+
+-(void)Second:(NSString *)voice withArray:(NSMutableArray *)array
+{
+    res=@"2";
+    for(int i=0;i<MAX_LEN;i++)
+    {
+        if ([voice containsString:array[i]])
+        {
+            res=@"t";
+            isSecond=YES;
+        }
+        else if([voice containsString:@"Recogonize failed."])
+        {
+            res=@"2";
+        }
+    }
 }
 
 +(Tool *)sharedInstance
